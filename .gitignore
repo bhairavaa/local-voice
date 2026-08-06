@@ -14,8 +14,10 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# Scoped to the repository root: an unanchored "lib/" would also ignore ui/src/lib/,
+# and git cannot re-include a path whose parent directory is excluded.
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -216,3 +218,38 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Local AI Assistant
+# ---------------------------------------------------------------------------
+
+# Node / interface
+node_modules/
+ui/dist/
+*.tsbuildinfo
+npm-debug.log*
+.vite/
+
+# Generated API client types (produced from the engine's OpenAPI document)
+ui/src/services/generated/
+
+# Rust / desktop shell
+target/
+desktop/gen/
+
+# Model weights. These are large, downloaded on first run, and must never be committed.
+# Ignore the contents rather than the directory itself, so the negation below can apply.
+models/*
+!models/.gitkeep
+
+# Runtime artifacts
+*.wav
+engine.log
+
+# Editors and operating system
+.vscode/*
+!.vscode/extensions.json
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
