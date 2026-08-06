@@ -1,0 +1,493 @@
+{
+  "components": {
+    "schemas": {
+      "AudioDeviceResponse": {
+        "description": "One microphone available on this machine.",
+        "properties": {
+          "index": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "is_default": {
+            "title": "Is Default",
+            "type": "boolean"
+          },
+          "max_input_channels": {
+            "title": "Max Input Channels",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "name",
+          "max_input_channels",
+          "is_default"
+        ],
+        "title": "AudioDeviceResponse",
+        "type": "object"
+      },
+      "CapabilitiesResponse": {
+        "description": "What this engine can currently do, for the interface to reflect in its controls.",
+        "properties": {
+          "enhancement_available": {
+            "description": "Whether the local text model can currently be reached.",
+            "title": "Enhancement Available",
+            "type": "boolean"
+          },
+          "enhancement_enabled": {
+            "description": "Whether text cleanup is switched on.",
+            "title": "Enhancement Enabled",
+            "type": "boolean"
+          },
+          "enhancement_model": {
+            "description": "Text model name, whether or not it is reachable.",
+            "title": "Enhancement Model",
+            "type": "string"
+          },
+          "input_devices": {
+            "description": "Available microphones.",
+            "items": {
+              "$ref": "#/components/schemas/AudioDeviceResponse"
+            },
+            "title": "Input Devices",
+            "type": "array"
+          },
+          "profiles": {
+            "description": "Selectable cleanup profiles.",
+            "items": {
+              "$ref": "#/components/schemas/EnhancementProfile"
+            },
+            "title": "Profiles",
+            "type": "array"
+          },
+          "speech_model": {
+            "description": "Whisper model in use.",
+            "title": "Speech Model",
+            "type": "string"
+          },
+          "speech_model_loaded": {
+            "description": "Whether the model is resident in memory.",
+            "title": "Speech Model Loaded",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "speech_model",
+          "speech_model_loaded",
+          "enhancement_enabled",
+          "enhancement_available",
+          "enhancement_model",
+          "profiles",
+          "input_devices"
+        ],
+        "title": "CapabilitiesResponse",
+        "type": "object"
+      },
+      "DictationResultResponse": {
+        "description": "The text produced by one dictation, with the timings behind it.",
+        "properties": {
+          "audio_seconds": {
+            "title": "Audio Seconds",
+            "type": "number"
+          },
+          "enhance_seconds": {
+            "title": "Enhance Seconds",
+            "type": "number"
+          },
+          "enhancement_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why cleanup was skipped, when it failed. The raw transcript is still returned.",
+            "title": "Enhancement Error"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "raw_text": {
+            "description": "Transcript exactly as the speech model produced it.",
+            "title": "Raw Text",
+            "type": "string"
+          },
+          "speech_seconds": {
+            "title": "Speech Seconds",
+            "type": "number"
+          },
+          "stopped_because": {
+            "description": "Why recording ended.",
+            "title": "Stopped Because",
+            "type": "string"
+          },
+          "text": {
+            "description": "Final text: cleaned up when that succeeded, raw otherwise.",
+            "title": "Text",
+            "type": "string"
+          },
+          "transcribe_seconds": {
+            "title": "Transcribe Seconds",
+            "type": "number"
+          },
+          "was_enhanced": {
+            "description": "Whether cleanup changed the transcript.",
+            "title": "Was Enhanced",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "text",
+          "raw_text",
+          "was_enhanced",
+          "language",
+          "model",
+          "audio_seconds",
+          "speech_seconds",
+          "transcribe_seconds",
+          "enhance_seconds",
+          "stopped_because"
+        ],
+        "title": "DictationResultResponse",
+        "type": "object"
+      },
+      "DictationState": {
+        "description": "What the engine is doing.",
+        "enum": [
+          "idle",
+          "recording",
+          "processing"
+        ],
+        "title": "DictationState",
+        "type": "string"
+      },
+      "DictationStateResponse": {
+        "description": "Whether a recording is in progress.",
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/DictationState"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "title": "DictationStateResponse",
+        "type": "object"
+      },
+      "EnhancementProfile": {
+        "description": "How a transcript should be rewritten.",
+        "enum": [
+          "general",
+          "email",
+          "notes",
+          "prompt"
+        ],
+        "title": "EnhancementProfile",
+        "type": "string"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "description": "Liveness report for the engine process.",
+        "properties": {
+          "process_id": {
+            "description": "Operating system process identifier of the engine.",
+            "title": "Process Id",
+            "type": "integer"
+          },
+          "status": {
+            "const": "ok",
+            "description": "Always 'ok'; failures surface as HTTP errors.",
+            "title": "Status",
+            "type": "string"
+          },
+          "uptime_seconds": {
+            "description": "Seconds since the engine finished starting.",
+            "title": "Uptime Seconds",
+            "type": "number"
+          },
+          "version": {
+            "description": "Engine package version.",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version",
+          "process_id",
+          "uptime_seconds"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "StopDictationRequest": {
+        "description": "Options applied when finishing a recording.",
+        "properties": {
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EnhancementProfile"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cleanup profile to apply. Defaults to the configured profile."
+          }
+        },
+        "title": "StopDictationRequest",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "Local AI Assistant Engine",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/capabilities": {
+      "get": {
+        "description": "Describe the available models and microphones.\n\nEnhancement availability is probed live, because Ollama can be started or stopped while\nthe engine is running.",
+        "operationId": "capabilities_capabilities_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilitiesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Report what the engine can currently do",
+        "tags": [
+          "system"
+        ]
+      }
+    },
+    "/dictation/cancel": {
+      "post": {
+        "description": "Throw away what has been captured without transcribing it.",
+        "operationId": "cancel_dictation_cancel_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Discard the recording in progress",
+        "tags": [
+          "dictation"
+        ]
+      }
+    },
+    "/dictation/start": {
+      "post": {
+        "description": "Open the microphone and start capturing.",
+        "operationId": "start_dictation_start_post",
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictationStateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Begin recording",
+        "tags": [
+          "dictation"
+        ]
+      }
+    },
+    "/dictation/state": {
+      "get": {
+        "operationId": "read_state_dictation_state_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictationStateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Report whether a recording is in progress",
+        "tags": [
+          "dictation"
+        ]
+      }
+    },
+    "/dictation/stop": {
+      "post": {
+        "description": "Stop capturing, transcribe, and clean up.\n\nThis is the slow call: it takes about as long as transcription needs.",
+        "operationId": "stop_dictation_stop_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopDictationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictationResultResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Finish recording and return the text",
+        "tags": [
+          "dictation"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Confirm the engine is running and report basic process facts.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Report engine liveness",
+        "tags": [
+          "system"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  engine:
+    name: Engine
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: engine
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - run: uv sync --locked
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format
+        run: uv run ruff format --check .
+
+      - name: Types
+        run: uv run mypy app
+
+      - name: Tests
+        run: uv run pytest
+
+  contract:
+    name: API contract is current
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - run: uv sync --locked
+        working-directory: engine
+
+      # A schema change that was not regenerated is a diff here rather than a runtime
+      # mismatch between the Python models and the TypeScript client.
+      - name: Regenerate and compare
+        run: uv run python -m app --export-openapi ../schema/openapi.json
+        working-directory: engine
+
+      - name: Fail if the committed contract is stale
+        shell: pwsh
+        run: |
+          $changes = git status --porcelain schema/openapi.json
+          if ($changes) {
+            Write-Host "schema/openapi.json is out of date. Regenerate and commit it:" -ForegroundColor Red
+            Write-Host "  cd engine; uv run python -m app --export-openapi ../schema/openapi.json"
+            git --no-pager diff -- schema/openapi.json
+            exit 1
+          }
+
+  ui:
+    name: Interface
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ui
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Types
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
