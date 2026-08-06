@@ -35,7 +35,10 @@ No cloud API. No account. No telemetry. The only network call in the product's l
 
 ## Demo
 
-https://github.com/bhairavaa/local-voice/raw/main/.github/media/demo.mp4
+
+https://github.com/user-attachments/assets/5c779008-4be2-4a14-9e7b-8239402a28d6
+
+
 
 ### Screenshots
 
