@@ -27,6 +27,14 @@ Press a hotkey, speak, and get clean text — pasted anywhere, on any app, with 
 
 No cloud API. No account. No telemetry. The only network call in the product's lifetime is the one-time model download.
 
+---
+
+## Demo
+
+https://github.com/bhairavaa/local-voice/raw/main/.github/media/demo.mp4
+
+---
+
 ```mermaid
 flowchart LR
     A["🎹 Global hotkey<br/>(Rust)"] --> B["🎤 Capture + VAD<br/>(Python)"]

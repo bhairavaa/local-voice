@@ -256,3 +256,7 @@ Desktop.ini
 engine/tests/test_*.py
 engine/tests/*
 scripts/doctor.ps1
+
+# Raw screen recordings. Never committed at source resolution/bitrate — see .github/media/
+# for the compressed version actually used in the README.
+/assets/
