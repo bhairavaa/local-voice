@@ -1,7 +1,7 @@
 [project]
 name = "local-voice"
 version = "0.1.0"
-description = "Offline speech and text-processing engine for Local AI Assistant"
+description = "Offline speech and text-processing engine for Local Voice"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }

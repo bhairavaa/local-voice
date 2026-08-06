@@ -1,6 +1,6 @@
 # Engine
 
-The offline speech and text-processing sidecar for Local AI Assistant.
+The offline speech and text-processing sidecar for Local Voice.
 
 The engine is a plain FastAPI application. It runs as a child process of the Tauri desktop
 shell, but it is deliberately independent: you can start it, exercise it with `curl`, and

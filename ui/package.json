@@ -1,9 +1,9 @@
 {
-  "name": "local-ai-assistant-ui",
+  "name": "local-voice-ui",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Interface for Local AI Assistant, rendered inside the Tauri desktop shell",
+  "description": "Interface for Local Voice, rendered inside the Tauri desktop shell",
   "scripts": {
     "dev": "vite",
     "generate:types": "openapi-typescript ../schema/openapi.json -o src/services/generated/engine.ts",

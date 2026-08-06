@@ -16,7 +16,7 @@ export function App() {
   return (
     <main className="flex h-full flex-col items-center justify-center gap-6 bg-surface p-8">
       <div className="text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-ink">Local AI Assistant</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-ink">Local Voice</h1>
         <p className="mt-1 text-sm text-ink-muted">
           Speech stays on this machine. Nothing is sent anywhere.
         </p>

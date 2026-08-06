@@ -1,4 +1,4 @@
-//! Desktop shell for Local AI Assistant.
+//! Desktop shell for Local Voice.
 //!
 //! This layer owns everything that touches the operating system. The Python engine owns the
 //! speech and text pipeline and nothing else, so it never needs elevated permissions or a

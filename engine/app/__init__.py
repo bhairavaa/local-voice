@@ -1,4 +1,4 @@
-"""Local AI Assistant engine: the offline speech and text-processing sidecar."""
+"""Local Voice engine: the offline speech and text-processing sidecar."""
 
 from __future__ import annotations
 

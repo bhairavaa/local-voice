@@ -23,7 +23,7 @@ from app.runtime.watchdog import ParentWatchdog
 
 logger = get_logger(__name__)
 
-API_TITLE = "Local AI Assistant Engine"
+API_TITLE = "Local Voice Engine"
 
 BACKGROUND_STOP_TIMEOUT_SECONDS = 2.0
 

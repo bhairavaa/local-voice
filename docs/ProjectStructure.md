@@ -1,7 +1,7 @@
 # Project structure
 
 ```
-local-ai-assistant/
+local-voice/
 ├── desktop/                  Tauri v2 shell (Rust) — owns all OS integration
 │   ├── src/
 │   │   ├── engine/

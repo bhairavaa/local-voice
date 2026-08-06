@@ -37,7 +37,7 @@ def _build_parser() -> argparse.ArgumentParser:
     """Define the command-line surface. Every option overrides file and environment values."""
     parser = argparse.ArgumentParser(
         prog="laa-engine",
-        description="Local AI Assistant engine sidecar.",
+        description="Local Voice engine sidecar.",
     )
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument("--config", type=Path, help="Path to a TOML configuration file.")

@@ -19,7 +19,7 @@ pub fn install<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let show = MenuItem::with_id(
         app,
         SHOW_ITEM,
-        "Open Local AI Assistant",
+        "Open Local Voice",
         true,
         None::<&str>,
     )?;
@@ -29,7 +29,7 @@ pub fn install<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
 
     let mut builder = TrayIconBuilder::with_id("main-tray")
         .menu(&menu)
-        .tooltip("Local AI Assistant")
+        .tooltip("Local Voice")
         // The menu is the right-click action; a left click should just open the window.
         .show_menu_on_left_click(false)
         .on_menu_event(handle_menu_event)
