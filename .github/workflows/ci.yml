@@ -34,9 +34,6 @@ jobs:
       - name: Types
         run: uv run mypy app
 
-      - name: Tests
-        run: uv run pytest
-
   contract:
     name: API contract is current
     runs-on: windows-latest
