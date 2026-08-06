@@ -255,3 +255,4 @@ Desktop.ini
 .DS_Store
 engine/tests/test_*.py
 engine/tests/*
+scripts/doctor.ps1
