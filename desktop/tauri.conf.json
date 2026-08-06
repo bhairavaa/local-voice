@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Local AI Assistant",
+  "version": "0.1.0",
+  "identifier": "dev.localaiassistant.app",
+  "build": {
+    "frontendDist": "../ui/dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": {
+      "script": "npm run dev",
+      "cwd": "../ui"
+    },
+    "beforeBuildCommand": {
+      "script": "npm run build",
+      "cwd": "../ui"
+    }
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Local AI Assistant",
+        "width": 720,
+        "height": 480,
+        "minWidth": 480,
+        "minHeight": 360,
+        "resizable": true,
+        "center": true
+      },
+      {
+        "label": "overlay",
+        "url": "index.html?window=overlay",
+        "title": "Listening",
+        "width": 168,
+        "height": 52,
+        "visible": false,
+        "alwaysOnTop": true,
+        "decorations": false,
+        "resizable": false,
+        "skipTaskbar": true,
+        "shadow": false,
+        "transparent": true,
+        "focus": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' http://127.0.0.1:* ipc: http://ipc.localhost; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "copyright": "Local AI Assistant contributors",
+    "shortDescription": "Offline, privacy-first dictation",
+    "longDescription": "Dictate anywhere on your machine. Speech recognition and text cleanup run entirely locally; no audio or text leaves the device."
+  }
+}
