@@ -13,6 +13,10 @@ Press a hotkey, speak, and get clean text — pasted anywhere, on any app, with 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Engine CI](https://github.com/bhairavaa/local-voice/actions/workflows/ci.yml/badge.svg)](https://github.com/bhairavaa/local-voice/actions/workflows/ci.yml)
 
+<br>
+
+<img src=".github/media/screenshot-1-idle.png" width="640" alt="Local Voice dictation window, showing the hotkey hint and Start dictating button">
+
 </div>
 
 ---
@@ -32,6 +36,20 @@ No cloud API. No account. No telemetry. The only network call in the product's l
 ## Demo
 
 https://github.com/bhairavaa/local-voice/raw/main/.github/media/demo.mp4
+
+### Screenshots
+
+<p align="center">
+  <img src=".github/media/screenshot-2-listening.png" width="46%" alt="The floating Listening overlay, shown while recording from another application">
+  &nbsp;&nbsp;
+  <img src=".github/media/screenshot-3-transcribing.png" width="46%" alt="Local Voice mid-transcription, showing the Transcribing state">
+</p>
+<p align="center"><em>Left: the "Listening" overlay — a separate, always-on-top window that appears while dictating from another app. It deliberately never takes keyboard focus, so the app you're typing into stays active. Right: transcription in progress, back in the main window.</em></p>
+
+<p align="center">
+  <img src=".github/media/screenshot-4-result.png" width="640" alt="Local Voice showing a completed transcript, already copied to the clipboard">
+</p>
+<p align="center"><em>Result, a few seconds later — already on the clipboard, ready to paste. (That transcript is Whisper describing this exact product, dictated in one take.)</em></p>
 
 ---
 

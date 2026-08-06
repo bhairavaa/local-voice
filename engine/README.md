@@ -3,8 +3,8 @@
 The offline speech and text-processing sidecar for Local Voice.
 
 The engine is a plain FastAPI application. It runs as a child process of the Tauri desktop
-shell, but it is deliberately independent: you can start it, exercise it with `curl`, and
-test it with `pytest` without building any Rust.
+shell, but it is deliberately independent: you can start it and exercise it with `curl`
+without building any Rust.
 
 ## Running
 
@@ -41,10 +41,7 @@ with `--config` or `LAA_CONFIG_FILE`.
 ## Checks
 
 ```bash
-uv run pytest
 uv run ruff check .
 uv run ruff format --check .
 uv run mypy app
 ```
-
-Tests requiring real models or hardware are marked `slow` and excluded from the default run.

@@ -70,14 +70,11 @@ local-voice/
 │   │   │   └── benchmark.py      laa-benchmark: measure models on this machine
 │   │   ├── bootstrap.py          create_app; the only place assembly happens
 │   │   └── __main__.py           CLI entrypoint
-│   ├── tests/
-│   │   └── fakes.py              doubles for every hardware and model boundary
 │   └── pyproject.toml
 │
 ├── schema/openapi.json       Committed API contract; regenerated, checked in CI
 ├── models/                   Model weights, downloaded on first run, never committed
 ├── scripts/
-│   ├── doctor.ps1            Prerequisite detection; reports, never installs
 │   └── generate_icons.py     Bundle icons, defined in code rather than committed blind
 ├── docs/
 └── .github/workflows/
@@ -95,6 +92,11 @@ created ahead of use.
 **Nothing large is committed.** Model weights (`models/`), build output (`ui/dist`, `target/`),
 and generated TypeScript (`ui/src/services/generated/`) are all ignored. `schema/openapi.json`
 *is* committed, because its diff is the drift signal.
+
+**The engine's test suite (`engine/tests/`) is not tracked in this repository.** It exists and
+runs in local development, but is intentionally excluded from what's pushed. Commands elsewhere
+in the docs reflect this: only `ruff`, `mypy`, and the Rust/TypeScript equivalents are given as
+reproducible checks, since those are what a fresh clone can actually run.
 
 Note that the repository's `.gitignore` scopes `/lib/` to the root rather than leaving it
 unanchored, so a future `ui/src/lib/` is not silently excluded — git cannot re-include a path

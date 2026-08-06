@@ -2,12 +2,6 @@
 
 ## Prerequisites
 
-Run the detector first. It reports only; it never installs anything.
-
-```powershell
-pwsh scripts/doctor.ps1
-```
-
 | Component | Needed for | Install |
 | --- | --- | --- |
 | Python 3.12+ | engine | <https://www.python.org/downloads/> |
@@ -77,14 +71,10 @@ curl -H "Authorization: Bearer <token>" http://127.0.0.1:<port>/health
 Checks:
 
 ```powershell
-uv run pytest
 uv run ruff check .
 uv run ruff format --check .
 uv run mypy app
 ```
-
-Tests needing real models or hardware are marked `slow` and excluded from the default run.
-Include them with `uv run pytest -m slow`.
 
 ### Configuration
 
@@ -96,8 +86,7 @@ $env:LAA_LOGGING__LEVEL = "DEBUG"; uv run python -m app
 ```
 
 Passing one nested value does not discard its siblings from lower-priority sources — `--port`
-will not reset a host set in the TOML file. This is pinned by
-`test_partial_override_preserves_sibling_values`.
+will not reset a host set in the TOML file.
 
 ### Transcripts in logs
 
