@@ -43,11 +43,14 @@ https://github.com/user-attachments/assets/5c779008-4be2-4a14-9e7b-8239402a28d6
 ### Screenshots
 
 <p align="center">
-  <img src=".github/media/screenshot-2-listening.png" width="46%" alt="The floating Listening overlay, shown while recording from another application">
-  &nbsp;&nbsp;
-  <img src=".github/media/screenshot-3-transcribing.png" width="46%" alt="Local Voice mid-transcription, showing the Transcribing state">
+  <img src=".github/media/screenshot-2-listening.png" width="640" alt="The floating Listening overlay, shown while recording from another application">
 </p>
-<p align="center"><em>Left: the "Listening" overlay — a separate, always-on-top window that appears while dictating from another app. It deliberately never takes keyboard focus, so the app you're typing into stays active. Right: transcription in progress, back in the main window.</em></p>
+<p align="center"><em>The "Listening" overlay — a separate, always-on-top window that appears while dictating from another app. It deliberately never takes keyboard focus, so the app you're typing into stays active.</em></p>
+
+<p align="center">
+  <img src=".github/media/screenshot-3-transcribing.png" width="640" alt="Local Voice mid-transcription, showing the Transcribing state">
+</p>
+<p align="center"><em>Transcription in progress, back in the main window.</em></p>
 
 <p align="center">
   <img src=".github/media/screenshot-4-result.png" width="640" alt="Local Voice showing a completed transcript, already copied to the clipboard">
