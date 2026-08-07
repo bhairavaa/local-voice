@@ -16,13 +16,7 @@ const QUIT_ITEM: &str = "quit";
 
 /// Build the tray icon and its menu.
 pub fn install<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
-    let show = MenuItem::with_id(
-        app,
-        SHOW_ITEM,
-        "Open Local Voice",
-        true,
-        None::<&str>,
-    )?;
+    let show = MenuItem::with_id(app, SHOW_ITEM, "Open Local Voice", true, None::<&str>)?;
     let quit = MenuItem::with_id(app, QUIT_ITEM, "Quit", true, None::<&str>)?;
     let separator = PredefinedMenuItem::separator(app)?;
     let menu = Menu::with_items(app, &[&show, &separator, &quit])?;

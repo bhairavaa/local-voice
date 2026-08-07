@@ -149,6 +149,18 @@ Removed the cap; wrote a `laa-benchmark` CLI so future performance claims are me
 Every engine startup made an outbound request to Hugging Face to check the cached model's revision — a **16-second delay** and a violation of "no network access after setup." Found by comparing two adjacent log timestamps. Fixed with an offline-first load: try cached weights locally, fall back to a download only if genuinely absent. Startup time: **18s → 2s**, and the privacy claim in this README is now actually true rather than aspirational.
 </details>
 
+<details>
+<summary><strong>🪟 A phantom console window, two layers deep in a process tree</strong></summary>
+
+<br>
+
+The packaged, double-clicked release build worked — until a black console window started appearing the instant the engine connected. The shell's own binary was provably GUI-subsystem (`dumpbin /headers` confirmed `subsystem (Windows GUI)`), and it had no console-type child process in its own process tree, which ruled out the obvious explanation.
+
+The real cause: `python.exe` is a console-subsystem executable, and Windows auto-allocates a new console for any console-subsystem process whose parent has none to inherit — invisible in every `cargo run`/`cargo tauri dev` session, since a terminal is always already present there, but glaring the moment there truly is no console at all. Worse, a `uv`-created virtualenv's `python.exe` on Windows is itself a *trampoline* that launches the real interpreter as its own child — one layer past what a `CREATE_NO_WINDOW` creation flag on the direct child could reach. Traced by walking the live process tree with `parentprocessid`, not by guessing.
+
+Fixed on two levels: `CREATE_NO_WINDOW` on the process spawned directly, and switching the launched interpreter from `python.exe` to `pythonw.exe` — GUI-subsystem end to end, including through the trampoline. Stderr was also switched from *inherited* to *piped-and-forwarded*, so suppressing the console didn't also mean losing the ability to see why the engine failed.
+</details>
+
 ---
 
 ## Tech stack
@@ -185,6 +197,16 @@ cargo tauri dev
 
 Full setup, including the Windows toolchain requirements: [`docs/DeveloperGuide.md`](docs/DeveloperGuide.md)
 
+Or build a real installer and run it like any other Windows app — no terminal required after that:
+
+```powershell
+cargo tauri build
+```
+
+Produces an NSIS and an MSI installer under `desktop/target/release/bundle/`. This is how the
+app is actually used day to day: install once, launch from the Start Menu, and `Ctrl+Alt+Space`
+works from anywhere until you Quit from the tray.
+
 ---
 
 ## Design principles
@@ -213,11 +235,12 @@ Full setup, including the Windows toolchain requirements: [`docs/DeveloperGuide.
 | Offline speech-to-text pipeline | ✅ Working, verified against real speech |
 | Global hotkey, clipboard, tray | ✅ Working, verified end-to-end |
 | Adaptive noise/endpointing | ✅ Working, tuned against a real microphone |
+| Packaged installer (MSI/NSIS) | ✅ Working — installs, no console leak, clean shutdown, no orphaned processes |
 | CI (lint, type-check, schema-drift check) | ✅ Configured |
-| Packaged installer (MSI/NSIS) | 🚧 In progress — sidecar bundling not yet solved |
 | Settings UI | 🚧 Config layer exists; no screen yet |
+| Distributable to other machines | 🚧 Not yet — the installer currently locates the engine via a build-time path, so it works once installed on the machine it was built on, not on a machine without this checkout |
 
-This is an actively evolving personal project, not a finished shrink-wrapped product — see [`docs/Architecture.md`](docs/Architecture.md) for what's deliberately deferred and why.
+Development is paused here — the app fully covers daily dictation use on the machine it was built for. The one deliberately unsolved piece is packaging the Python engine as a self-contained sidecar so the installer works on *any* machine, not just this one; see [`docs/Architecture.md`](docs/Architecture.md) for the reasoning behind what's built and what's deferred.
 
 ---
 
