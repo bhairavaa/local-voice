@@ -11,11 +11,23 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
 use crate::engine::handshake::{Handshake, HandshakeError};
 use crate::engine::launcher::{self, ResolveError};
 
 /// How long to wait for the engine to publish its handshake before giving up.
 const STARTUP_TIMEOUT: Duration = Duration::from_secs(30);
+
+/// Suppresses Windows' automatic console allocation for the child process.
+///
+/// `python.exe` is a console-subsystem executable. When its parent has no console handle to
+/// inherit, Windows silently opens a brand-new visible console for it -- invisible in every
+/// `cargo run` / `cargo tauri dev` session, because those always already have a console to
+/// inherit from, but glaringly visible for a double-clicked release build, which has none.
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x0800_0000;
 
 #[derive(Debug, thiserror::Error)]
 pub enum EngineError {
@@ -53,7 +65,10 @@ impl EngineProcess {
             .arg(std::process::id().to_string())
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
-            .stderr(Stdio::inherit());
+            .stderr(Stdio::piped());
+
+        #[cfg(windows)]
+        builder.creation_flags(CREATE_NO_WINDOW);
 
         if let Some(directory) = &command.working_directory {
             builder.current_dir(directory);
@@ -61,6 +76,12 @@ impl EngineProcess {
 
         let mut child = builder.spawn().map_err(EngineError::Spawn)?;
         let stdout = child.stdout.take().ok_or(EngineError::ExitedEarly)?;
+
+        // Piped rather than inherited, so nothing is lost now that there is no console to
+        // inherit in a release build: engine errors still reach us, just through our own logs.
+        if let Some(stderr) = child.stderr.take() {
+            thread::spawn(move || forward_engine_log(stderr));
+        }
 
         match read_handshake_line(stdout) {
             Ok(line) => {
@@ -95,6 +116,14 @@ impl EngineProcess {
         if let Err(error) = self.child.wait() {
             tracing::warn!(%error, "could not reap the engine process");
         }
+    }
+}
+
+/// Relay the engine's own log lines into ours, so stopping console inheritance does not mean
+/// losing the ability to see why the engine failed.
+fn forward_engine_log(stderr: std::process::ChildStderr) {
+    for line in BufReader::new(stderr).lines().map_while(Result::ok) {
+        tracing::info!(target: "engine", "{line}");
     }
 }
 

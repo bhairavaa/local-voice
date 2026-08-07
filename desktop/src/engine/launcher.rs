@@ -32,8 +32,14 @@ const BUNDLED_ENGINE: &str = "laa-engine.exe";
 #[cfg(not(windows))]
 const BUNDLED_ENGINE: &str = "laa-engine";
 
+// `pythonw.exe`, not `python.exe`: the venv's `python.exe` is a trampoline that launches the
+// real interpreter as its own child, one layer beneath anything CREATE_NO_WINDOW in
+// `process.rs` can reach. `pythonw.exe` is GUI-subsystem end to end, including through that
+// trampoline, so no console gets auto-allocated at any layer -- not just the one we spawn
+// directly. Functionally identical to `python.exe` here since stdout/stderr are always
+// explicitly piped rather than left to default to a console that was never going to exist.
 #[cfg(windows)]
-const VENV_INTERPRETER: &str = ".venv/Scripts/python.exe";
+const VENV_INTERPRETER: &str = ".venv/Scripts/pythonw.exe";
 #[cfg(not(windows))]
 const VENV_INTERPRETER: &str = ".venv/bin/python";
 
